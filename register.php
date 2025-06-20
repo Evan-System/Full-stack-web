@@ -1,22 +1,22 @@
-<?php include '../includes/navbar.php';
-include '../includes/links.php';
+<?php include 'includes/navbar.php';
+include 'includes/links.php';
 ?>
 <!-- Add SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php
 // Process the registration form submission
-include('connection.php'); // Connect to db first
+include('config/connection.php'); // Connect to db first
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $admission_number = $_POST['admission_number'];
     $full_name = $_POST['full_name'];
     $email = $_POST['email'];
-    $phone = $_POST['phone'];
+    $phone = $_POST['phone_number'];
     $course = $_POST['course'];
     $gender = $_POST['gender'];
 
-    $stmt = $conn->prepare("INSERT INTO students (admission_number, full_name, email, phone, course, gender) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO students (admission_number, full_name, email, phone_number, course, gender) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $admission_number, $full_name, $email, $phone, $course, $gender);
 
     if ($stmt->execute()) {
@@ -77,7 +77,7 @@ if (isset($_GET['msg'])) {
                     </div>
                     <div class="col-md-6">
                         <label for="phone" class="form-label">Phone Number</label>
-                        <input type="text" id="phone" name="phone" class="form-control"
+                        <input type="text" id="phone" name="phone_number" class="form-control"
                             placeholder="Enter your phone number" required>
                     </div>
                 </div>
@@ -104,4 +104,4 @@ if (isset($_GET['msg'])) {
     </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'includes/footer.php'; ?>
