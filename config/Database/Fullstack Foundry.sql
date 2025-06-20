@@ -6,3 +6,6 @@ CREATE TABLE students (
    gender VARCHAR(100) NOT NULL
 );
 
+ALTER TABLE students
+ADD COLUMN admission_number VARCHAR(50) NOT NULL,
+ADD COLUMN course VARCHAR(50) NOT NULL;
