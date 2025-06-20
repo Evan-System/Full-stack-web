@@ -1,93 +1,107 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-//Database connection file
-include 'config/connect.php';
+<?php include '../includes/navbar.php';
+include '../includes/links.php';
+?>
+<!-- Add SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-//process the registration
-if($_SERVER['REQUEST_METHOD']== 'POST'){
+<?php
+// Process the registration form submission
+include('connection.php'); // Connect to db first
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $admission_number = $_POST['admission_number'];
     $full_name = $_POST['full_name'];
-    $phone_number = $_POST['phone_number'];
     $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $course = $_POST['course'];
     $gender = $_POST['gender'];
 
-      // prepare and bind the SQL statement
-      $stmt = $conn->prepare("INSERT INTO students (full_name,phone_number,email,gender) VALUES (?,?,?,?)");
-      $stmt->bind_param( "ssss", $full_name, $phone_number, $email, $gender);
+    $stmt = $conn->prepare("INSERT INTO students (admission_number, full_name, email, phone, course, gender) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $admission_number, $full_name, $email, $phone, $course, $gender);
 
-      //Execute the statement
-      if($stmt->execute()) {
-        echo "New student registered successfully";
+    if ($stmt->execute()) {
         header("Location: register.php?msg=success");
-      }else{
-        echo "Error: " . $stmt->error;
+    } else {
         header("Location: register.php?msg=error");
-      }
-      // Close Connections
-      $stmt->close();
-      mysqli_close($conn);
+    }
+
+    $stmt->close();
+    $conn->close();
 }
 
-if(isset($_GET['msg'])){
-    if($_GET['msg'] === 'success') {
+// Check for success/error messages
+if (isset($_GET['msg'])) {
+    if ($_GET['msg'] === 'success') {
         echo "<script>
-             swal.fire({
-                title: 'Success!',
-                text: 'Student registered successfully.',
+            Swal.fire({
                 icon: 'success',
-                confirmButtonText: 'OK',
-                });  
+                title: 'Success!',
+                text: 'Student registered successfully!',
+                confirmButtonColor: '#3085d6'
+            });
         </script>";
-    } elseif($_GET['msg'] === 'error') {
+    } else if ($_GET['msg'] === 'error') {
         echo "<script>
-             swal.fire({
-                title: 'Error!',
-                text: 'There was an error registering the student.',
+            Swal.fire({
                 icon: 'error',
-                confirmButtonText: 'OK',
-            }); 
+                title: 'Error!',
+                text: 'Failed to register student. Please try again.',
+                confirmButtonColor: '#d33'
+            });
         </script>";
     }
 }
 ?>
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student_registration</title>
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-   <!-- Sweet alert link -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="card p-4 shadow">
-            <h2 class="mt-5 text-center text info">Student Registration Form</h2>
-            <form action="" method="posix_geteuid">
-                <label for="name" class="mb-2">Full Name</label>
-                <input type="text" name="full_name" class="form-control" placeholder="Enter your Full Name"required>
-                <label for="phone" class="mb-2">Phone Number</label>
-                <input type="text" name="phone_number" class="form-control" placeholder="Enter your Phone Number"required>
-                <label for="email" class="mb-2">Email</label>
-                <input type="text" name="email" class="form-control" placeholder="Enter your Email"required>
-                <label for="gender" class="mb-2">Gender</label>
-                <select name="gender" id="gender" class="form-select"required>
-                    <option value="">--Select Gender--</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Prefer not to say">Prefer not to say</option>
-                </select>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary mt-3 w-100">Register</button>
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4">Registration</h2>
+        <div class="bg-white p-4 rounded shadow-md">
+            <form action="" method="POST">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="admission_number" class="form-label">Admission Number</label>
+                        <input type="text" id="admission_number" name="admission_number" class="form-control"
+                            placeholder="Enter your admission number" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" class="form-control"
+                            placeholder="Enter your full name" required>
+                    </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control"
+                            placeholder="Enter your email address" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" id="phone" name="phone" class="form-control"
+                            placeholder="Enter your phone number" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="course" class="form-label">Course</label>
+                    <input type="text" id="course" name="course" class="form-control"
+                        placeholder="Enter your course name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select id="gender" name="gender" class="form-select" required>
+                        <option value="">Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></script>
-    
-</body>
-</html>
+</section>
+
+<?php include 'footer.php'; ?>
