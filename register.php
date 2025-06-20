@@ -1,10 +1,35 @@
-<?php  
-  include 'config/connect.php';
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+//Database connection file
+include 'config/connect.php';
 
-  if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    
-  }
+//process the registration
+if($_SERVER['REQUEST_METHOD']== 'POST'){
+    $full_name = $_POST['full_name'];
+    $phone_number = $_POST['phone_number'];
+    $email = $_POST['email'];
+    $gender = $_POST['gender'];
+
+      // prepare and bind the SQL statement
+      $stmt = $conn->prepare("INSERT INTO students (full_name,phone_number,email,gender) VALUES (?,?,?,?)");
+      $stmt->bind_param( "ssss", $full_name, $phone_number, $email, $gender);
+
+      //Execute the statement
+      if($stmt->execute()) {
+        echo "New student registered successfully";
+        header("Location: register.php?msg=success");
+      }else{
+        echo "Error: " . $stmt->error;
+        header("Location: register.php?msg=error");
+      }
+      // Close Connections
+      $stmt->close();
+      mysqli_close($conn);
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +43,7 @@
     <div class="container mt-5">
         <div class="card p-4 shadow">
             <h2 class="mt-5 text-center text info">Student Registration Form</h2>
-            <form action="process_registration.php" method="posix_geteuid">
+            <form action="" method="posix_geteuid">
                 <label for="name" class="mb-2">Full Name</label>
                 <input type="text" name="full_name" class="form-control" placeholder="Enter your Full Name"required>
                 <label for="phone" class="mb-2">Phone Number</label>
