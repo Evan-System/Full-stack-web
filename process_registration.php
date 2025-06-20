@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
     $gender = $_POST['gender'];
 
       // prepare and bind the SQL statement
-      $stmt = $conn->prepare("INSERT INTO students (full_name,phone_number,email,gender) VALUES (?,?,?,?");
+      $stmt = $conn->prepare("INSERT INTO students (full_name,phone_number,email,gender) VALUES (?,?,?,?)");
       $stmt->bind_param( "ssss", $full_name, $phone_number, $email, $gender);
 
       //Execute the statement
