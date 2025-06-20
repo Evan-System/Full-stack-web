@@ -27,6 +27,28 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
       $stmt->close();
       mysqli_close($conn);
 }
+
+if(isset($_GET['msg'])){
+    if($_GET['msg'] === 'success') {
+        echo "<script>
+             swal.fire({
+                title: 'Success!',
+                text: 'Student registered successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                });  
+        </script>";
+    } elseif($_GET['msg'] === 'error') {
+        echo "<script>
+             swal.fire({
+                title: 'Error!',
+                text: 'There was an error registering the student.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            }); 
+        </script>";
+    }
+}
 ?>
 
 
@@ -38,6 +60,8 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student_registration</title>
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+   <!-- Sweet alert link -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="container mt-5">
