@@ -1,0 +1,8 @@
+CREATE TABLE students (
+    id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(20) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+   email VARCHAR(20) NOT NULL,
+   gender VARCHAR(100) NOT NULL
+);
+
